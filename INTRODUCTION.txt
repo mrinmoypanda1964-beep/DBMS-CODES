@@ -1,0 +1,235 @@
+SQL Codes for DBMS – Detailed Notes
+
+Structured Query Language (SQL) is used to interact with databases. It
+is divided into categories based on purpose. Below is a complete note
+covering all important SQL commands, their syntax, and roles.
+
+------------------------------------------------------------------------
+
+1. DDL (Data Definition Language)
+
+DDL commands define and modify the database structure.
+
+-   CREATE
+    -   Creates databases, tables, indexes, etc.
+
+    -   Syntax:
+
+            CREATE DATABASE db_name;
+            CREATE TABLE table_name (
+                column1 datatype constraints,
+                column2 datatype constraints
+            );
+-   ALTER
+    -   Modifies an existing table.
+
+    -   Syntax:
+
+            ALTER TABLE table_name ADD column_name datatype;
+            ALTER TABLE table_name MODIFY column_name datatype;
+            ALTER TABLE table_name DROP COLUMN column_name;
+-   DROP
+    -   Deletes database or table permanently.
+
+    -   Syntax:
+
+            DROP DATABASE db_name;
+            DROP TABLE table_name;
+-   TRUNCATE
+    -   Removes all rows from a table but keeps the structure.
+
+    -   Syntax:
+
+            TRUNCATE TABLE table_name;
+
+------------------------------------------------------------------------
+
+2. DML (Data Manipulation Language)
+
+DML commands handle the data stored in tables.
+
+-   INSERT
+    -   Adds data into a table.
+
+    -   Syntax:
+
+            INSERT INTO table_name (col1, col2) VALUES (val1, val2);
+-   UPDATE
+    -   Modifies existing data.
+
+    -   Syntax:
+
+            UPDATE table_name SET column_name = value WHERE condition;
+-   DELETE
+    -   Deletes rows based on a condition.
+
+    -   Syntax:
+
+            DELETE FROM table_name WHERE condition;
+
+------------------------------------------------------------------------
+
+3. DQL (Data Query Language)
+
+DQL commands retrieve data.
+
+-   SELECT
+    -   Fetches records from a table.
+
+    -   Syntax:
+
+            SELECT * FROM table_name;
+            SELECT column1, column2 FROM table_name WHERE condition ORDER BY column;
+
+------------------------------------------------------------------------
+
+4. DCL (Data Control Language)
+
+DCL commands control access and permissions.
+
+-   GRANT
+    -   Gives access rights.
+
+    -   Syntax:
+
+            GRANT SELECT, INSERT ON table_name TO user_name;
+-   REVOKE
+    -   Removes access rights.
+
+    -   Syntax:
+
+            REVOKE SELECT, INSERT ON table_name FROM user_name;
+
+------------------------------------------------------------------------
+
+5. TCL (Transaction Control Language)
+
+TCL commands manage transactions.
+
+-   COMMIT
+    -   Saves changes permanently.
+
+    -   Syntax:
+
+            COMMIT;
+-   ROLLBACK
+    -   Undo changes made before last commit.
+
+    -   Syntax:
+
+            ROLLBACK;
+-   SAVEPOINT
+    -   Creates points for partial rollbacks.
+
+    -   Syntax:
+
+            SAVEPOINT savepoint_name;
+            ROLLBACK TO savepoint_name;
+
+------------------------------------------------------------------------
+
+6. Joins
+
+Joins combine rows from multiple tables.
+
+-   INNER JOIN
+
+        SELECT a.col, b.col FROM table1 a
+        INNER JOIN table2 b ON a.id = b.id;
+
+-   LEFT JOIN
+
+        SELECT a.col, b.col FROM table1 a
+        LEFT JOIN table2 b ON a.id = b.id;
+
+-   RIGHT JOIN
+
+        SELECT a.col, b.col FROM table1 a
+        RIGHT JOIN table2 b ON a.id = b.id;
+
+-   FULL OUTER JOIN
+
+        SELECT a.col, b.col FROM table1 a
+        FULL OUTER JOIN table2 b ON a.id = b.id;
+
+------------------------------------------------------------------------
+
+7. Constraints
+
+Constraints enforce rules in tables.
+
+-   NOT NULL
+    -   Column cannot store NULL.
+-   UNIQUE
+    -   All values must be unique.
+-   PRIMARY KEY
+    -   Unique + Not Null (identifies each row).
+-   FOREIGN KEY
+    -   Refers to primary key in another table.
+-   CHECK
+    -   Ensures condition is true for values.
+-   DEFAULT
+    -   Assigns default value if none is given.
+
+Example:
+
+    CREATE TABLE Student (
+        RollNo INT PRIMARY KEY,
+        Name VARCHAR(50) NOT NULL,
+        Age INT CHECK (Age >= 18),
+        DeptID INT,
+        CONSTRAINT fk_dept FOREIGN KEY (DeptID) REFERENCES Department(DeptID)
+    );
+
+------------------------------------------------------------------------
+
+8. Views
+
+-   CREATE VIEW
+
+        CREATE VIEW view_name AS
+        SELECT column1, column2 FROM table_name WHERE condition;
+
+-   DROP VIEW
+
+        DROP VIEW view_name;
+
+------------------------------------------------------------------------
+
+9. Indexes
+
+Indexes improve search performance.
+
+-   Syntax:
+
+        CREATE INDEX index_name ON table_name (column_name);
+        DROP INDEX index_name;
+
+------------------------------------------------------------------------
+
+10. Functions
+
+SQL provides built-in functions.
+
+-   Aggregate Functions:
+    -   COUNT(), SUM(), AVG(), MIN(), MAX()
+-   String Functions:
+    -   LENGTH(), UPPER(), LOWER(), SUBSTR()
+-   Date Functions:
+    -   NOW(), CURDATE(), DATEDIFF(date1, date2)
+
+Example:
+
+    SELECT COUNT(*), AVG(Salary), MAX(Salary) FROM Employee;
+
+------------------------------------------------------------------------
+
+Summary
+
+-   DDL → Structure (CREATE, ALTER, DROP, TRUNCATE)
+-   DML → Data (INSERT, UPDATE, DELETE)
+-   DQL → Query (SELECT)
+-   DCL → Access (GRANT, REVOKE)
+-   TCL → Transactions (COMMIT, ROLLBACK, SAVEPOINT)
+
+This note covers all essential SQL commands with syntax and their roles.
