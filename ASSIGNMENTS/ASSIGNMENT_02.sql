@@ -1,90 +1,82 @@
-/* 
-Assignment Question:
-
-1. Create a table called EMP (EMPLOYEE) with fields:
-   - EMPNO   NUMBER(6)
-   - ENAME   VARCHAR2(20)
-   - JOB     VARCHAR2(10)
-   - DEPTNO  NUMBER(3)
-   - SAL     NUMBER(7,2)
-   - HIREDATE DATE (added to calculate experience)
-
-2. Insert sample values.
-
-3. Queries:
-   a) Select all columns of EMP table.
-   b) Select only EMPNO, ENAME, JOB.
-   c) Select unique JOBs.
-   d) Select employees who are SALESMAN.
-   e) Select ENAME, SAL, and sort by SAL (ascending).
-   f) Display ENAME, SAL, and percentage increment if everyone gets +200 salary.
-   g) Display ENAME and work experience (in years) using SYSDATE - HIREDATE.
+/*
+ASSIGNMENT 2
+Queries on EMP table:
+1. Select all columns.
+2. Select only Empname and Job.
+3. Select unique Jobs.
+4. Select only salesmen.
+5. Display employee name, job, salary in order of salary.
+6. Show % increment if salary increased by 200.
+7. Show work experience using SYSDATE and HIREDATE.
+8. Compare DROP and ALTER with examples.
 */
 
-------------------------------------------------------
--- 1. Create EMP table
-------------------------------------------------------
-CREATE TABLE EMP (
-    EMPNO    NUMBER(6),
-    ENAME    VARCHAR2(20) NOT NULL,
-    JOB      VARCHAR2(10) NOT NULL,
-    DEPTNO   NUMBER(3),
-    SAL      NUMBER(7,2),
-    HIREDATE DATE
-);
 
-------------------------------------------------------
--- 2. Insert sample data
-------------------------------------------------------
-INSERT INTO EMP VALUES (101, 'Alice',   'Manager', 10, 60000, DATE '2015-03-01');
-INSERT INTO EMP VALUES (102, 'Bob',     'Clerk',   20, 25000, DATE '2018-07-15');
-INSERT INTO EMP VALUES (103, 'Charlie', 'Analyst', 10, 40000, DATE '2016-01-10');
-INSERT INTO EMP VALUES (104, 'David',   'Salesman',30, 30000, DATE '2020-11-20');
-INSERT INTO EMP VALUES (105, 'Emma',    'Salesman',30, 28000, DATE '2019-05-25');
-
-------------------------------------------------------
--- 3a) Query: Select all columns
-------------------------------------------------------
+/* Step 1: Select all columns 
+   - The * symbol selects all the columns from the EMP table. */
 SELECT * FROM EMP;
 
-------------------------------------------------------
--- 3b) Query: Select only EMPNO, ENAME, JOB
-------------------------------------------------------
-SELECT EMPNO, ENAME, JOB FROM EMP;
 
-------------------------------------------------------
--- 3c) Query: Select unique JOBs
-------------------------------------------------------
+/* Step 2: Select only ENAME and JOB 
+   - This displays only the employee name and job from the EMP table. */
+SELECT ENAME, JOB FROM EMP;
+
+
+/* Step 3: Unique Jobs 
+   - DISTINCT ensures duplicate job roles are not repeated. */
 SELECT DISTINCT JOB FROM EMP;
 
-------------------------------------------------------
--- 3d) Query: Select employees who are SALESMAN
-------------------------------------------------------
-SELECT * FROM EMP
-WHERE JOB = 'Salesman';
 
-------------------------------------------------------
--- 3e) Query: Employee name, salary, ordered by salary
-------------------------------------------------------
-SELECT ENAME, SAL
-FROM EMP
+/* Step 4: Select only Salesmen 
+   - WHERE condition is used to filter rows.
+   - Only employees whose JOB is 'SALESMAN' will be shown. */
+SELECT ENAME, JOB FROM EMP 
+WHERE JOB = 'SALESMAN';
+
+
+/* Step 5: Display employee name, job, salary in order of salary 
+   - ORDER BY arranges results in ascending order (lowest to highest).
+   - To show highest salary first, use ORDER BY SAL DESC. */
+SELECT ENAME, JOB, SAL 
+FROM EMP 
 ORDER BY SAL;
 
-------------------------------------------------------
--- 3f) Query: Salary increment analysis
--- Display ENAME, current SAL, and percentage increment
--- Formula: (200 / SAL) * 100
-------------------------------------------------------
-SELECT ENAME,
-       SAL,
-       ROUND((200 / SAL) * 100, 2) AS PCTINCR
+
+/* Step 6: Show percentage increment if salary increased by 200 
+   - Formula: (Increment ÷ Original Salary) × 100 
+   - Here increment = 200, so percentage = (200/SAL)*100 */
+SELECT ENAME, SAL, (200/SAL)*100 AS PCT_INCR
 FROM EMP;
 
-------------------------------------------------------
--- 3g) Query: Work experience in years
--- Formula: FLOOR(MONTHS_BETWEEN(SYSDATE, HIREDATE) / 12)
-------------------------------------------------------
-SELECT ENAME,
-       HIREDATE,
-       FLOOR(MONTHS_BETWEEN(SYSDATE, HIREDATE) / 12) AS EXPERIENCE_YEARS
+
+/* Step 7: Show work experience of employees 
+   - HIREDATE column must exist in EMP table (Date of Joining).
+   - MONTHS_BETWEEN(SYSDATE, HIREDATE) gives total months worked.
+   - Divide by 12 and take FLOOR() to get complete years. */
+
+/* Add HIREDATE column (if not already present) */
+ALTER TABLE EMP ADD HIREDATE DATE;
+
+/* Update HIREDATE values (example data for demo) */
+UPDATE EMP SET HIREDATE = TO_DATE('2020-01-01', 'YYYY-MM-DD') WHERE EMPNO = 101;
+UPDATE EMP SET HIREDATE = TO_DATE('2021-06-15', 'YYYY-MM-DD') WHERE EMPNO = 102;
+UPDATE EMP SET HIREDATE = TO_DATE('2019-03-10', 'YYYY-MM-DD') WHERE EMPNO = 103;
+
+/* Calculate work experience in years */
+SELECT ENAME, 
+       FLOOR(MONTHS_BETWEEN(SYSDATE, HIREDATE)/12) AS YEARS_EXPERIENCE
 FROM EMP;
+
+
+/* Step 8: Compare DROP and ALTER with examples */
+
+/* DROP Example:
+   - DROP deletes a table permanently along with its data.
+   - Once dropped, the table cannot be retrieved unless restored from backup. */
+CREATE TABLE TEST (ID INT);
+DROP TABLE TEST;
+
+/* ALTER Example:
+   - ALTER modifies the structure of an existing table (without removing data).
+   - Here, we add a new column BONUS to the EMP table. */
+ALTER TABLE EMP ADD BONUS INT;
