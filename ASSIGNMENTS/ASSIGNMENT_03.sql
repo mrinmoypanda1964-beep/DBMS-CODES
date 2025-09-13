@@ -24,20 +24,24 @@ GROUP BY DEPTNO;
 /* Step 2: Add and update EMAIL column based on department number
    - ALTER TABLE is used to add a new column EMAIL of VARCHAR2(30).
    - UPDATE sets email dynamically using ENAME and department condition.
-   - The || operator concatenates strings in Oracle. */
+*/
 ALTER TABLE EMP ADD EMAIL VARCHAR(30);
 
-UPDATE EMP 
-SET EMAIL = ENAME || '@oracle.com' 
+-- For deptno < 1000
+UPDATE EMP
+SET EMAIL = CONCAT(ENAME, '@oracle.com')
 WHERE DEPTNO < 1000;
 
-UPDATE EMP 
-SET EMAIL = ENAME || '@oracle.co.uk' 
+-- For deptno < 5000
+UPDATE EMP
+SET EMAIL = CONCAT(ENAME, '@oracle.co.uk')
 WHERE DEPTNO < 5000;
 
-UPDATE EMP 
-SET EMAIL = ENAME || '@oracle.co.in' 
+-- For deptno >= 5000
+UPDATE EMP
+SET EMAIL = CONCAT(ENAME, '@oracle.co.in')
 WHERE DEPTNO >= 5000;
+
 
 
 /* Step 3: DELETE vs TRUNCATE
@@ -71,14 +75,14 @@ HAVING AVG(SAL) > 6500;
    - Make sure EMPNO is unique.
    - HIREDATE must be properly converted to DATE using TO_DATE(). */
 INSERT INTO EMP (EMPNO, ENAME, JOB, DEPTNO, SAL, HIREDATE, EMAIL)
-VALUES (10000, 'Scott Tiger', 'Company President', 280, 50000, TO_DATE('2014-02-01','YYYY-MM-DD'), 'stiger@oracle.com');
-
+VALUES (10000, 'Scott Tiger', 'Company President', 280, 50000, '2014-02-01', 'stiger@oracle.com');
 
 /* Step 6: Show day, month, and year from HIREDATE
    - TO_CHAR(date, format) extracts specific parts of a DATE column.
    - 'DD' → Day, 'MM' → Month, 'YYYY' → Year. */
-SELECT ENAME, 
-       TO_CHAR(HIREDATE, 'DD') AS DAY,
-       TO_CHAR(HIREDATE, 'MM') AS MONTH,
-       TO_CHAR(HIREDATE, 'YYYY') AS YEAR
+SELECT ENAME,
+       DATE_FORMAT(HIREDATE, '%d') AS DAY,
+       DATE_FORMAT(HIREDATE, '%m') AS MONTH,
+       DATE_FORMAT(HIREDATE, '%Y') AS YEAR
 FROM EMP;
+
